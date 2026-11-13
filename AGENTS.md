@@ -28,3 +28,5 @@ use the editor.
   own key and store it in Secrets.
 - **Secrets.** Lovable manages them. Do not put secret values in the repo.
 <!-- LOVABLE:END -->
+
+The Beeti home experience is split between its route entry and a focused command-center module so household workflows remain cohesive and independently maintainable.

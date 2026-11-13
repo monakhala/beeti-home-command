@@ -1,23 +1,23 @@
 import { createFileRoute } from "@tanstack/react-router";
 
-// The home route ships no og:image, so serve-time hosting can inject the
-// project's social preview (explicit og:image or latest screenshot).
-export const Route = createFileRoute("/")({
-  component: Index,
-});
+import { BeetiCommandCenter } from "@/components/beeti/beeti-command-center";
 
-// IMPORTANT: Replace this placeholder. See ./README.md for routing conventions.
-function Index() {
-  return (
-    <div
-      className="flex min-h-screen items-center justify-center"
-      style={{ backgroundColor: "#fcfbf8" }}
-    >
-      <img
-        data-lovable-blank-page-placeholder="REMOVE_THIS"
-        src="https://cdn.gpteng.co/blank-app-v1.svg"
-        alt="Your app will live here!"
-      />
-    </div>
-  );
-}
+export const Route = createFileRoute("/")({
+  head: () => ({
+    meta: [
+      { title: "Beeti — Your Egyptian household, in good hands" },
+      {
+        name: "description",
+        content: "A calm household command center for Cairo: keep documents, bills, renewals and approvals in view with Beeti.",
+      },
+      { property: "og:title", content: "Beeti — Your household, in good hands" },
+      {
+        property: "og:description",
+        content: "Household renewals, documents and approvals, thoughtfully organized for life in Egypt.",
+      },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
+    ],
+  }),
+  component: BeetiCommandCenter,
+});
