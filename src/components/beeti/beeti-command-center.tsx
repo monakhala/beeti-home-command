@@ -97,6 +97,20 @@ const documents: DocumentRecord[] = [
   },
 ];
 
+const documentByReference = (reference: string) =>
+  documents.find((document) => document.reference === reference) ?? documents[0] ?? {
+    name: "Household record",
+    provider: "Beeti",
+    category: "Home",
+    reference: "Record",
+    amount: "Not available",
+    date: "Not available",
+    expiry: "Not available",
+    terms: "Illustrative household record",
+    initials: "B",
+    tone: "green" as const,
+  };
+
 const auditSeed = [
   { title: "Prepaid electricity balance checked", detail: "Routine status check · no external action", time: "Today, 09:14", icon: "check" },
   { title: "WE renewal comparison prepared", detail: "Vodafone Egypt offer verified · awaiting approval", time: "Today, 08:42", icon: "shield" },
@@ -124,7 +138,7 @@ function StatusMark({ tone = "green" }: { tone?: "green" | "gold" | "coral" | "b
 export function BeetiCommandCenter() {
   const [view, setView] = useState<View>("timeline");
   const [sheetMode, setSheetMode] = useState<SheetMode>(null);
-  const [selectedDocument, setSelectedDocument] = useState<DocumentRecord>(documents[0]);
+  const [selectedDocument, setSelectedDocument] = useState<DocumentRecord>(documentByReference("Contract · 2406–8819"));
   const [selectedObligation, setSelectedObligation] = useState("Prepaid electricity meter");
   const [search, setSearch] = useState("");
   const [request, setRequest] = useState("");
@@ -320,7 +334,7 @@ export function BeetiCommandCenter() {
                     <TimelineRow icon={<Zap size={17} />} iconTone="coral" title="Prepaid electricity meter" subtitle="North Cairo Electricity · EGP 86 remaining" when="Today" status="Low balance" statusTone="coral" onClick={() => reviewObligation("Prepaid electricity meter")} actionLabel="Check details" />
                   </TimelineGroup>
                   <TimelineGroup date="IN 2 DAYS · 17 JUN">
-                    <TimelineRow icon={<Landmark size={17} />} iconTone="gold" title="Compound maintenance" subtitle="Nakhala Compound · Quarterly fee EGP 4,850" when="17 Jun" status="Due soon" statusTone="gold" onClick={() => openDocument(documents[1])} actionLabel="View invoice" />
+                    <TimelineRow icon={<Landmark size={17} />} iconTone="gold" title="Compound maintenance" subtitle="Nakhala Compound · Quarterly fee EGP 4,850" when="17 Jun" status="Due soon" statusTone="gold" onClick={() => openDocument(documentByReference("Invoice · NK–Q2–061"))} actionLabel="View invoice" />
                   </TimelineGroup>
                   <TimelineGroup date="IN 5 DAYS · 20 JUN">
                     <TimelineRow icon={<Clock3 size={17} />} iconTone="blue" title="Family clinic follow-up" subtitle="Dr. Yasmine Adel · New Cairo Medical Center" when="20 Jun · 5:30 PM" status="Scheduled" statusTone="blue" onClick={() => reviewObligation("Family clinic follow-up")} actionLabel="Appointment details" />
@@ -409,7 +423,7 @@ export function BeetiCommandCenter() {
       <Sheet open={sheetMode !== null} onOpenChange={(open) => { if (!open) setSheetMode(null); }}>
         <SheetContent side="right" className="w-full overflow-y-auto border-l border-border bg-background p-0 sm:max-w-[560px]">
           {sheetMode === "renewal" && (
-            <RenewalSheet approval={approval} onDecision={decideApproval} onVault={() => openDocument(documents[0])} />
+            <RenewalSheet approval={approval} onDecision={decideApproval} onVault={() => openDocument(documentByReference("Contract · 2406–8819"))} />
           )}
           {sheetMode === "vault" && <VaultSheet document={selectedDocument} />}
           {sheetMode === "architecture" && <ArchitectureSheet parseTokens={parseTokens} setParseTokens={setParseTokens} />}
@@ -421,7 +435,7 @@ export function BeetiCommandCenter() {
   );
 }
 
-function NavButton({ active, icon, label, count, onClick }: { active: boolean; icon: React.ReactNode; label: string; count?: string; onClick: () => void }) {
+function NavButton({ active, icon, label, count, onClick }: { active: boolean; icon: React.ReactNode; label: string; count?: string | undefined; onClick: () => void }) {
   return <Button variant="ghost" onClick={onClick} aria-current={active ? "page" : undefined} className={cn("w-full justify-start gap-3 px-3", active && "bg-accent font-semibold text-primary")}>
     {icon}<span className="flex-1 text-left">{label}</span>{count && <span className="min-w-5 text-center text-xs text-muted-foreground">{count}</span>}
   </Button>;
